@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../auth/auth";
 import { loginService } from "../api/commonService";
+import logo from "../assets/logo-trade-dashboard.png";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -28,11 +29,9 @@ const Login: React.FC = () => {
     <div className="login-wrapper">
       <div className="login-card fade-in">
         <div className="login-logo">
-          <img src="/logo.png" alt="Logo" />
+          <img src={logo} alt="TradeFlow Logo" className="logo-img" /> Trading
+          dashboard
         </div>
-
-        <h2 className="login-title">Welcome Back</h2>
-        <p className="login-subtitle">Secure access to trading dashboard</p>
 
         <form onSubmit={handleSubmit} className="login-form">
           <input
@@ -57,7 +56,36 @@ const Login: React.FC = () => {
               className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? (
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5 0-9.27-3.11-11-8a16.9 16.9 0 0 1 5.17-7.62" />
+                  <path d="M1 1l22 22" />
+                  <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c5 0 9.27 3.11 11 8a16.9 16.9 0 0 1-1.67 2.9" />
+                </svg>
+              ) : (
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
             </span>
           </div>
 

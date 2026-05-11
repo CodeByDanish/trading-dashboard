@@ -7,7 +7,7 @@ import { TickerChart } from "./TickerChart";
 import { TickerList } from "./TickerList";
 import { useNavigate } from "react-router-dom";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-trade-dashboard.png";
 
 export const Dashboard: React.FC = () => {
   const { tickers, prices, history } = useLivePrices();
@@ -28,8 +28,8 @@ export const Dashboard: React.FC = () => {
       <header className="dashboard-header">
         <div className="header-left">
           <div className="logo">
-            {/* <img src={logo} alt="TradeFlow Logo" className="logo-img" /> */}
-            Trade Dashboard
+            <img src={logo} alt="TradeFlow Logo" className="logo-img" />
+            <span> Trading Dashboard </span>
           </div>
         </div>
 

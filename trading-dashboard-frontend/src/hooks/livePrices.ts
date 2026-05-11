@@ -19,12 +19,11 @@ export type ChartPoint = {
 };
 
 const INITIAL_TICKERS: Ticker[] = [
+  { symbol: "AAPL", name: "Apple" },
   { symbol: "TSLA", name: "Tesla" },
   { symbol: "BTC-USD", name: "Bitcoin" },
-  { symbol: "AAPL", name: "Apple" },
 ];
 
-// create initial state
 function createInitialState(tickers: Ticker[]) {
   const prices: Record<string, TickerPrice> = {};
   const history: Record<string, ChartPoint[]> = {};

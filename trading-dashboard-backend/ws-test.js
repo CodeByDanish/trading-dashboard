@@ -14,7 +14,7 @@ ws.on("open", () => {
   ws.send(
     JSON.stringify({
       type: "subscribe",
-      tickers: ["TSLA", "BTC-USD", "AAPL"],
+      tickers: ["AAPL", "TSLA", "BTC-USD"],
     }),
   );
 });
