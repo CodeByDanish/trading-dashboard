@@ -1,17 +1,23 @@
-jest.setTimeout(100000);
-
 const WebSocket = require("ws");
-const jwt = require("jsonwebtoken");
+const request = require("supertest");
+const { server, app } = require("../src/app");
 
-const { server } = require("../src/app");
+jest.setTimeout(10000);
 
-let ws;
 let port;
+let token;
 
 beforeAll((done) => {
-  // Let OS choose free port
-  const listener = server.listen(0, () => {
+  const listener = server.listen(0, async () => {
     port = listener.address().port;
+
+    const res = await request(app).post("/login").send({
+      username: "MultiBank",
+      password: "MultiBank",
+    });
+
+    token = res.body.token;
+
     done();
   });
 });
@@ -21,19 +27,16 @@ afterAll((done) => {
 });
 
 test("WebSocket connects and receives welcome message", (done) => {
-  ws = new WebSocket(`ws://localhost:${port}/ws`);
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
 
   ws.on("message", (msg) => {
-    const data = JSON.parse(msg);
+    const data = JSON.parse(msg.toString());
 
-    expect(data.type).toBe("connected");
+    expect(data.type).toBe("Trading Dashboard WebSocket");
 
     ws.close();
-
     done();
   });
 
-  ws.on("error", (err) => {
-    done(err);
-  });
+  ws.on("error", (err) => done(err));
 });

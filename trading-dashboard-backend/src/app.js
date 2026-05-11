@@ -1,20 +1,15 @@
 const express = require("express");
 const http = require("http");
 const jwt = require("jsonwebtoken");
-const webSocket = require("ws");
+const WebSocket = require("ws");
 const cors = require("cors");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+const SECRET_KEY =
+  "DASDASDASDNKASDASDB123123KNASJ12312NKCN000$$@@@#@#@#@##$#$#$";
 
-app.use(express.json());
+const CORS_ORIGIN = "http://localhost:5173";
 
 const AvailableTickers = ["AAPL", "TSLA", "BTC-USD"];
 
@@ -24,13 +19,20 @@ const AvailableHistoricalData = {
   "BTC-USD": [{ time: Date.now() - 60000, close: 30000 }],
 };
 
-const SECRET_KEY =
-  "DASDASDASDNKASDASDB123123KNASJ12312NKCN000$$@@@#@#@#@##$#$#$";
-
 const USER_TEST = {
   username: "MultiBank",
   password: "MultiBank",
 };
+
+app.use(
+  cors({
+    origin: CORS_ORIGIN,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+app.use(express.json());
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization || "";
@@ -44,7 +46,7 @@ function authMiddleware(req, res, next) {
     const payload = jwt.verify(token, SECRET_KEY);
     req.user = payload;
     next();
-  } catch (e) {
+  } catch {
     return res.status(401).json({ error: "Invalid token" });
   }
 }
@@ -54,34 +56,38 @@ app.post("/login", (req, res) => {
 
   if (username === USER_TEST.username && password === USER_TEST.password) {
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
+
     return res.json({
       success: true,
       token,
     });
   }
 
-  res
-    .status(401)
-    .json({ success: false, message: "Invalid user. Please try again" });
+  return res.status(401).json({
+    success: false,
+    message: "Invalid user. Please try again",
+  });
 });
 
 app.get("/tickers", authMiddleware, (req, res) => {
-  res.json({ tikcers: AvailableTickers });
+  res.json({ tickers: AvailableTickers });
 });
 
 app.get("/history/:symbol", authMiddleware, (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
+
   if (!AvailableHistoricalData[symbol]) {
-    return res
-      .status(401)
-      .json({ error: "Unknow symbol, Please use correct symbol" });
+    return res.status(404).json({ error: "Unknown symbol" });
   }
-  res.json({ symbol, data: AvailableHistoricalData[symbol] });
+
+  res.json({
+    symbol,
+    data: AvailableHistoricalData[symbol],
+  });
 });
 
 const server = http.createServer(app);
-
-const wss = new webSocket.Server({ server, path: "/ws" });
+const wss = new WebSocket.Server({ server, path: "/ws" });
 
 function verifyTokenFromQuery(url) {
   const [, query = ""] = url.split("?");
@@ -89,9 +95,10 @@ function verifyTokenFromQuery(url) {
   const token = params.get("token");
 
   if (!token) return null;
+
   try {
     return jwt.verify(token, SECRET_KEY);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -101,7 +108,7 @@ wss.on("connection", (ws, req) => {
 
   if (!user) {
     ws.send(JSON.stringify({ type: "error", message: "Unauthorized" }));
-    ws.close(4001, "Invalid or expire token, Please try again");
+    ws.close(4001, "Invalid token");
     return;
   }
 
@@ -111,19 +118,25 @@ wss.on("connection", (ws, req) => {
   ws.send(
     JSON.stringify({
       type: "Trading Dashboard WebSocket",
-      message: "You are connected to mock data",
+      message: "Connected",
       availableTickers: AvailableTickers,
     }),
   );
 
   ws.on("message", (msg) => {
-    const data = JSON.parse(msg.toString());
+    let data;
+    try {
+      data = JSON.parse(msg.toString());
+    } catch {
+      return;
+    }
 
     if (data.type === "subscribe") {
-      ws.subscriptions = new Set(data.tickers);
+      ws.subscriptions = new Set(data.tickers || []);
     }
   });
 });
+
 function randomPrice(last) {
   const change = (Math.random() - 0.5) * 2;
   return Math.max(1, last + change);
@@ -135,7 +148,7 @@ const lastAvailablePriceList = {
   "BTC-USD": 2800,
 };
 
-setInterval(() => {
+const priceInterval = setInterval(() => {
   const now = Date.now();
 
   for (const symbol of AvailableTickers) {
@@ -143,6 +156,7 @@ setInterval(() => {
       lastAvailablePriceList[symbol],
     );
   }
+
   const updates = AvailableTickers.map((symbol) => ({
     symbol,
     time: now,
@@ -150,18 +164,33 @@ setInterval(() => {
   }));
 
   wss.clients.forEach((client) => {
-    if (client.readyState !== webSocket.OPEN) return;
+    if (client.readyState !== WebSocket.OPEN) return;
+
     const subs = client.subscriptions || new Set(AvailableTickers);
+
     const filtered = updates.filter((u) => subs.has(u.symbol));
+
     if (filtered.length > 0) {
-      client.send(
-        JSON.stringify({
-          type: "price_update",
-          data: filtered,
-        }),
-      );
+      client.send(JSON.stringify({ type: "price_update", data: filtered }));
     }
   });
 }, 1000);
 
-module.exports = { app, server, wss };
+function shutdown() {
+  clearInterval(priceInterval);
+
+  return new Promise((resolve) => {
+    wss.close(() => {
+      server.close(() => {
+        resolve();
+      });
+    });
+  });
+}
+
+module.exports = {
+  app,
+  server,
+  wss,
+  shutdown,
+};
