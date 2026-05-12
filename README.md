@@ -70,11 +70,19 @@ Live UI Updates
 
 This project uses Docker Compose to run both frontend and backend together.
 
+task-multibank/
+│
+├── trading-dashboard-frontend/
+├── trading-dashboard-backend/
+├── docker-compose.yml
+
 ## Important Warning
 
 Make sure Docker is installed and running on your system before executing any Docker commands.
 
 ### Build Docker Images
+
+Run this command from the **root folder (Task Multibank)**:
 
 ```bash
 docker compose build
