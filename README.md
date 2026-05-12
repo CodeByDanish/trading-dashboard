@@ -30,7 +30,7 @@ trading-dashboard/
 
 - Node.js
 - Express.js
-- WebSocket (ws / socket.io)
+- WebSocket
 - JWT Authentication
 
 ---

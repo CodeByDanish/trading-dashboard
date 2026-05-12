@@ -14,7 +14,7 @@ A backend service built with Node.js, Express, and WebSocket for a real-time tra
 - JWT Authentication
 - CORS
 - Jest (Testing)
-- Nodemon (Development)
+- Nodemon
 
 ---
 
@@ -57,20 +57,15 @@ npm run dev
 npm test
 ```
 
-## Available Scripts
+## Test Credentials
 
-Runs:
-npm run dev
+Use the following demo credentials for authentication testing:
 
----
+```bash
+Username: MultiBank
+Password: MultiBank
 
-## Run Tests
-
-npm test
-
-Uses Jest for testing APIs and services.
-
----
+```
 
 ## Environment Variables
 
