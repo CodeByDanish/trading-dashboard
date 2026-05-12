@@ -1,27 +1,41 @@
-# 📊 Trading Dashboard
+# Trading Dashboard
 
-## 🚀 Project Overview
+## Project Overview
 
-This is a modern Trading Dashboard web application built with React and TypeScript.  
-It provides a responsive interface for viewing market tickers, tracking price movements, and handling secure authentication.
+A real-time trading dashboard built with React (Frontend) and Node.js (Backend) that simulates live market data and displays interactive price updates.
 
-The project focuses on performance, clean UI design, and a fintech-style user experience.
+The system uses WebSocket for real-time communication between frontend and backend, enabling live ticker updates and responsive UI changes.
+
+Docker is used to containerize both frontend and backend services for consistent development and deployment environments.
+
+## Project Structure
+
+trading-dashboard/
+│
+├── frontend/ # React + TypeScript UI
+├── backend/ # Node.js + Express + WebSocket API
+├── docker-compose.yml
+
+## Tech Stack
+
+### Frontend
+
+- React (TypeScript)
+- React Router
+- CSS Variables (Theming system)
+- WebSocket client
+- REST API integration
+
+### Backend
+
+- Node.js
+- Express.js
+- WebSocket (ws / socket.io)
+- JWT Authentication
 
 ---
 
-## 🧠 Features
-
-- Secure login system
-- Live ticker list
-- Real-time price updates UI
-- Price increase/decrease indicators
-- Show/Hide password toggle
-- Responsive layout for all screen sizes
-- Smooth UI interactions
-
----
-
-## ⚙️ Tech Stack
+## Tech Stack
 
 - React (TypeScript)
 - React Router
@@ -31,51 +45,21 @@ The project focuses on performance, clean UI design, and a fintech-style user ex
 
 ---
 
-## 📌 Assumptions & Trade-offs
+## Assumptions & Trade-offs
 
 - Authentication is token-based using a simple JWT system
 - No refresh token mechanism is implemented
-- Market data is mocked from backend service
+- Data is mocked from backend service
 - WebSocket is used for real-time updates
-- UI prioritizes simplicity over advanced charting features
 
 ---
 
-## 🧪 Running Tests
+## System Flow
 
-### Install dependencies
-
-```bash
-npm install
-
-
-Run tests
-
-npm test
-
-Testing tools
-Jest
-Supertest
-
-How to Run Project
-
-npm run dev
-
-
-📦 Project Structure
-
-frontend/
-backend/
-src/
-  components/
-  pages/
-  services/
-
-
-  Bonus Features
-
-  JWT authentication flow
-  Responsive mobile-first design
-  WebSocket real-time price streaming
-  Clean modular architecture
-```
+Backend (Trade Data Simulator)
+↓
+WebSocket Server
+↓
+Frontend React Client
+↓
+Live UI Updates

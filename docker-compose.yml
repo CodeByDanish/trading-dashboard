@@ -1,0 +1,20 @@
+services:
+  frontend:
+    container_name: trading-dashboard-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    container_name: trading-dashboard-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: always

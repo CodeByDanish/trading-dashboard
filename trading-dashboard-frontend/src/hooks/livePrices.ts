@@ -1,22 +1,6 @@
 import { useEffect, useState } from "react";
 import { getToken } from "../auth/auth";
-
-export type Ticker = {
-  symbol: string;
-  name: string;
-};
-
-export type TickerPrice = {
-  symbol: string;
-  price: number;
-  change: number;
-  timestamp: number;
-};
-
-export type ChartPoint = {
-  time: string;
-  price: number;
-};
+import type { ChartPoint, Ticker, TickerPrice } from "../types/trade";
 
 const INITIAL_TICKERS: Ticker[] = [
   { symbol: "AAPL", name: "Apple" },
@@ -54,6 +38,7 @@ export function useLivePrices() {
     if (!token) return;
 
     const ws = new WebSocket(`ws://localhost:3000/ws?token=${token}`);
+
     ws.onopen = () => {
       console.log("WS connected");
 
