@@ -63,3 +63,30 @@ WebSocket Server
 Frontend React Client
 ↓
 Live UI Updates
+
+---
+
+## Docker Setup
+
+This project uses Docker Compose to run both frontend and backend together.
+
+## Important Warning
+
+Make sure Docker is installed and running on your system before executing any Docker commands.
+
+### Build Docker Images
+
+```bash
+docker compose build
+```
+
+### Run (Up) Containers
+
+```bash
+docker compose up
+```
+
+## Access Application
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000

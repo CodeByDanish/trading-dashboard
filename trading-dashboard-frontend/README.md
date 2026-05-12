@@ -34,15 +34,15 @@ It is designed for performance, responsiveness, and a clean UI.
 
 ## Installation
 
+### Clone the repository
+
 ```bash
+git clone https://github.com/CodeByDanish/trading-dashboard.git
+
+cd trading-dashboard-frontend
+
 npm install
-```
 
----
-
-## Run Development Server
-
-```bash
 npm run dev
 ```
 

@@ -37,9 +37,27 @@ backend/
 
 ---
 
-## Available Scripts
+## Installation
 
-## Development Mod
+### Clone the repository
+
+```bash
+git clone https://github.com/CodeByDanish/trading-dashboard.git
+
+cd trading-dashboard-backend
+
+npm install
+
+npm run dev
+```
+
+### Running Tests
+
+```bash
+npm test
+```
+
+## Available Scripts
 
 Runs:
 npm run dev
